@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Horarios</string>
+    <string name="materia">Materia</string>
+    <string name="horario">Horario</string>
+    <string name="salon">Salon</string>
+    <string name="guarda">Guarda</string>
+    <string name="elimina">Eimina</string>
+    <string name="modifica">Modificar</string>
+    <string name="limpia">Limpiar</string>
+    <string-array name="valores_array">
+        <item>Seleccione dia</item>
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miercoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+    </string-array>
+    <string-array name="valores_arrays">
+        <item>Seleccione edificio</item>
+        <item>Ingenieria</item>
+        <item>Ciencias sociales</item>
+        <item>Basicas</item>
+        <item>Ligeros</item>
+        <item>Graduados</item>
+        <item>Pesados</item>
+        <item>Culturales</item>
+    </string-array>
+</resources>
