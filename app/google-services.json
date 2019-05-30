@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "459131959825-6djc1p97dps2etun5rsok3neb4o8ho47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gmail.yair.horarios",
+            "certificate_hash": "3b3a1dcc899aef41a2b7085e5766dae1f5bd92c3"
+          }
+        },
+        {
           "client_id": "459131959825-coa0jdti4o72l1752leuv9eo5flojsl5.apps.googleusercontent.com",
           "client_type": 3
         }

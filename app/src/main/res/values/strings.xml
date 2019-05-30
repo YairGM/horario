@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">Horarios</string>
     <string name="materia">Materia</string>
-    <string name="horario">Horario</string>
+    <string name="horarioentrada">Hora entrada</string>
+    <string name="horariosalida">Hora salida</string>
     <string name="salon">Salon</string>
-    <string name="guarda">Guarda</string>
-    <string name="elimina">Eimina</string>
+    <string name="guarda">Guardar</string>
+    <string name="elimina">Eiminar</string>
     <string name="modifica">Modificar</string>
     <string name="limpia">Limpiar</string>
+    <string name="usuario">Correo</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="entrar">Iniciar sesion</string>
+    <string name="registro">Registrarse</string>
+    <string name="cerrar">Cerrar sesion</string>
     <string-array name="valores_array">
         <item>Seleccione dia</item>
         <item>Lunes</item>

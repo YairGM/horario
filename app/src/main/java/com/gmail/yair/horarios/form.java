@@ -1,6 +1,7 @@
 package com.gmail.yair.horarios;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import android.widget.Spinner;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,12 +33,12 @@ import java.util.UUID;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class form extends AppCompatActivity {
 
     private List<Personas> listPerson = new ArrayList<Personas>();
     ArrayAdapter<Personas> arrayAdapterPersona;
 
-    EditText nomM, horario,salon;
+    EditText nomM, horaentrada,horasalida,salon;
     Spinner dia, edificios;
     TextView ctrldia, ctrledi;
     ListView listV_personas;
@@ -56,10 +58,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_form);
 
         nomM=findViewById(R.id.materia);
-        horario=findViewById(R.id.horario);
+        horaentrada=findViewById(R.id.horarioentrada);
+        horasalida=findViewById(R.id.horariosalida);
         dia=findViewById(R.id.dia);
         edificios=findViewById(R.id.edificio);
         salon=findViewById(R.id.salon);
@@ -69,14 +72,14 @@ public class MainActivity extends AppCompatActivity {
         listV_personas = findViewById(R.id.lv_datosPersonas);
 
 
-        horario.setOnClickListener(new View.OnClickListener() {
+        horaentrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar calendario = Calendar.getInstance();
                 int currentHour = calendario.get(Calendar.HOUR_OF_DAY);
                 int currentMinute = calendario.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog=new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog=new TimePickerDialog(form.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         if (hourOfDay>=12){
@@ -85,8 +88,32 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             ampm = "AM";
                         }
-                        horario.setText(String.format("%02d:%02d", hourOfDay, minute)+ampm);
-                        horario.setText(hourOfDay + ":" + minute);
+                        horaentrada.setText(String.format("%02d:%02d", hourOfDay, minute)+ampm);
+                        horaentrada.setText(hourOfDay + ":" + minute);
+                    }
+                }, 0, 0, false);
+                timePickerDialog.show();
+
+            }
+        });
+        horasalida.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendario = Calendar.getInstance();
+                int currentHour = calendario.get(Calendar.HOUR_OF_DAY);
+                int currentMinute = calendario.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog=new TimePickerDialog(form.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (hourOfDay>=12){
+                            ampm = "PM";
+                        }
+                        else{
+                            ampm = "AM";
+                        }
+                        horasalida.setText(String.format("%02d:%02d", hourOfDay, minute)+ampm);
+                        horasalida.setText(hourOfDay + ":" + minute);
                     }
                 }, 0, 0, false);
                 timePickerDialog.show();
@@ -102,7 +129,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 personaSelected = (Personas) parent.getItemAtPosition(position);
                 nomM.setText(personaSelected.getMateria());
-                horario.setText(personaSelected.getHorario());
+                horaentrada.setText(personaSelected.getHoraentrada());
+                horasalida.setText(personaSelected.getHorasalida());
                 salon.setText(personaSelected.getSalon());
                 ctrldia.setText(personaSelected.getDia());
                 ctrledi.setText(personaSelected.getEdificio());
@@ -119,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     Personas p = objSnaptshot.getValue(Personas.class);
                     listPerson.add(p);
 
-                    arrayAdapterPersona = new ArrayAdapter<Personas>(MainActivity.this, android.R.layout.simple_list_item_1, listPerson);
+                    arrayAdapterPersona = new ArrayAdapter<Personas>(form.this, android.R.layout.simple_list_item_1, listPerson);
                     listV_personas.setAdapter(arrayAdapterPersona);
                 }
             }
@@ -147,21 +175,23 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         String nombremateria = nomM.getText().toString();
-        String horarios = horario.getText().toString();
+        String horarios = horaentrada.getText().toString();
+        String horariosalida = horasalida.getText().toString();
         String dias = dia.getSelectedItem().toString();
         String edificio = edificios.getSelectedItem().toString();
         String salones = salon.getText().toString();
 
         switch (item.getItemId()){
             case R.id.action_guarda:{
-                if (nombremateria.equals("")||horarios.equals("")||edificio.equals("")||dias.equals("")||salones.equals("")){
+                if (nombremateria.equals("")||horaentrada.equals("")||horariosalida.equals("")||edificio.equals("")||dias.equals("")||salones.equals("")){
                     validacion();
                 }
                 else {
                     Personas p = new Personas();
                     p.setUid(UUID.randomUUID().toString());
                     p.setMateria(nombremateria);
-                    p.setHorario(horarios);
+                    p.setHoraentrada(horarios);
+                    p.setHorasalida(horariosalida);
                     p.setDia(dias);
                     p.setEdificio(edificio);
                     p.setSalon(salones);
@@ -175,7 +205,8 @@ public class MainActivity extends AppCompatActivity {
                 Personas p = new Personas();
                 p.setUid(personaSelected.getUid());
                 p.setMateria(nomM.getText().toString().trim());
-                p.setHorario(horario.getText().toString().trim());
+                p.setHoraentrada(horaentrada.getText().toString().trim());
+                p.setHorasalida(horasalida.getText().toString().trim());
                 p.setDia(dia.getSelectedItem().toString().trim());
                 p.setEdificio(edificios.getSelectedItem().toString().trim());
                 p.setSalon(salon.getText().toString().trim());
@@ -196,6 +227,12 @@ public class MainActivity extends AppCompatActivity {
                 limpiarCajas();
                 break;
             }
+            case R.id.action_cerrar:{
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(form.this, login.class));
+                Toast.makeText(this,"Sesion cerrada", Toast.LENGTH_LONG).show();
+                break;
+            }
             default:break;
         }
         return true;
@@ -203,7 +240,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void limpiarCajas() {
         nomM.setText("");
-        horario.setText("");
+        horaentrada.setText("");
+        horasalida.setText("");
         salon.setText("");
         dia.setSelection(0);
         edificios.setSelection(0);
@@ -212,18 +250,22 @@ public class MainActivity extends AppCompatActivity {
     }
     private void validacion() {
         String nombremateria = nomM.getText().toString();
-        String horarios = horario.getText().toString();
+        String horarios = horaentrada.getText().toString();
+        String horariosalida = horasalida.getText().toString();
         String dias = dia.getSelectedItem().toString();
         String edificio = edificios.getSelectedItem().toString();
         String salones = salon.getText().toString();
         if (nombremateria.equals("")){
-            nomM.setError("Required");
+            nomM.setError("Ingresar materia");
         }
         else if (horarios.equals("")){
-            horario.setError("Required");
+            horaentrada.setError("Ingresar hora de entrada");
+        }
+        else if (horariosalida.equals("")){
+            horasalida.setError("Ingresar hora de salida");
         }
         else if (salones.equals("")){
-            salon.setError("Required");
+            salon.setError("Ingresar salon");
         }
     }
 

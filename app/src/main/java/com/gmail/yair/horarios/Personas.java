@@ -4,7 +4,8 @@ package com.gmail.yair.horarios;
 public class Personas {
     private String uid;
     private String Materia;
-    private String Horario;
+    private String Horaentrada;
+    private String Horasalida;
     private String Dia;
     private String Edificio;
     private String Salon;
@@ -26,12 +27,20 @@ public class Personas {
         Materia=materia;
     }
 
-    public String getHorario(){
-        return Horario;
+    public String getHoraentrada(){
+        return Horaentrada;
     }
 
-    public void setHorario (String horario){
-        Horario=horario;
+    public void setHoraentrada (String horaentrada){
+        Horaentrada=horaentrada;
+    }
+
+    public String getHorasalida(){
+        return Horasalida;
+    }
+
+    public void setHorasalida (String horasalida){
+        Horasalida=horasalida;
     }
 
     public String getDia(){
